@@ -29,6 +29,9 @@ class Event<T> implements Callable<Optional<T>> {
 
     }
 
+    /**
+     * @return returns the return variable of the inputted code block {@link Async.IU}
+     */
     @Override
     public Optional<T> call() {
         Thread.currentThread().setName(Thread.currentThread().getName() + "-" + threadNumber);

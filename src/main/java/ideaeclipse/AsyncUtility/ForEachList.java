@@ -14,6 +14,12 @@ import java.util.concurrent.Future;
  * @param <T> Return type expected
  */
 public class ForEachList<T> extends AsyncList<T> {
+    /**
+     * Executes each code block individually doesn't wait for one to finish to execute another
+     * returns the return values in the order you added them to the list
+     *
+     * @return returns each return of each inputted code block
+     */
     @Override
     public Optional<List<Optional<T>>> execute() {
         ExecutorService service = Executors.newSingleThreadExecutor();

@@ -2,9 +2,10 @@
 * This utility allows you to added code blocks into a list and execute them asynchronously on multiple different threads
 * You can also synchronously execute code to free up the main thread
 ## Methods
-* There are two main methods
-    * Async.execute()
+* There are two main methods for asnyc execution
+    * AsyncList
         * For asynchronous execution
+        * Instances are (ForEachList, WaterfallList)
     * Async.queue()
         * For synchronous execution
 ## Examples
@@ -12,7 +13,7 @@
 ```java
 Integer a = Async.queue(() -> {
         System.out.println("Synchronous execution");
-        return 1;
+        return Optional.of(1);
     }, "TestThread");
 System.out.println(a);
 ```
@@ -21,45 +22,45 @@ System.out.println(a);
 /*
 * Return:
 * Synchronous execution
-* 1
+* Optional[1]
 */
 ```
 * Asynchronous execution
 ```java
 private AsyncTest() {
-        Async.AsyncList<Integer> list = new Async.AsyncList<>();
-        list.add(() -> {
-            System.out.println("Starting 1");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Ending 1");
-            return 1;
-        });
-        list.add(() -> {
-            System.out.println("Starting 2");
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Ending 2");
-            return 2;
-        });
-        list.add(() -> {
-            System.out.println("Starting 3");
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Ending 3");
-            return 3;
-        });
-        System.out.println(Async.execute(list));
-    }
+    AsyncList<Integer> list = new ForEachList<>();
+    list.add(o -> {
+        System.out.println("Starting 1");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Ending 1");
+        return Optional.of(1);
+    });
+    list.add(o -> {
+        System.out.println("Starting 2");
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Ending 2");
+        return Optional.of(2);
+    });
+    list.add(o -> {
+        System.out.println("Starting 3");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Ending 3");
+        return Optional.of(3);
+    });
+    System.out.println(list.execute());
+}
 ```
 * This execute method executes which ever method is next in the set and starts executing it
 * As you can see from the code The method with the shortest thread sleep time ends first and the longest ends last
@@ -67,13 +68,13 @@ private AsyncTest() {
 ```java
 /*
 * Result:
-* Starting 1
 * Starting 3
 * Starting 2
+* Starting 1
 * Ending 2
 * Ending 1
 * Ending 3
-* [1, 2, 3]
+* Optional[[Optional[1], Optional[2], Optional[3]]]
 */
 ```
 #### Projects
