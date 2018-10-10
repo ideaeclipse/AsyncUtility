@@ -6,6 +6,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/**
+ * Executes each index of the parent list one by one and passes the return value to the following index
+ *
+ * @param <T>
+ * @author Ideaeclipse
+ */
 public class WaterfallList<T> extends AsyncList<T> {
     @Override
     public Optional<List<Optional<T>>> execute() {
@@ -18,11 +24,11 @@ public class WaterfallList<T> extends AsyncList<T> {
                 if (i == 0) {
                     tempFuture = subService.submit(new Event<>(this.get(i), i, Optional.empty()));
                 } else if (i == (this.size() - 1)) {
-                    tempFuture = subService.submit(new Event<>(this.get(i), i, Optional.of(previous.get())));
+                    tempFuture = subService.submit(new Event<>(this.get(i), i, previous));
                     subService.shutdown();
                     return Collections.singletonList(tempFuture.get());
                 } else {
-                    tempFuture = subService.submit(new Event<>(this.get(i), i, Optional.of(previous.get())));
+                    tempFuture = subService.submit(new Event<>(this.get(i), i, previous));
                 }
                 previous = tempFuture.get();
             }

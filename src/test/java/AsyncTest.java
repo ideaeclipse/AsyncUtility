@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public class AsyncTest {
     private AsyncTest() {
+        AsyncList<Integer> parentList = new WaterfallList<>();
         AsyncList<Integer> list = new ForEachList<>();
         list.add(o -> {
             System.out.println("Starting 1");
@@ -37,28 +38,18 @@ public class AsyncTest {
             System.out.println("Ending 3");
             return Optional.of(3);
         });
-        /*
-         * Starting 1
-         * Starting 2
-         * Starting 3
-         * Ending 2
-         * Ending 1
-         * Ending 3
-         * [1, 2, 3]
-         */
-        for (Optional<Integer> o : list.execute().get()) {
+        parentList.add(o-> {
+            list.execute().get().forEach(a->{
+                System.out.print(a.isPresent() + " ");
+                System.out.println(a.isPresent() ? a.get() : "N/a");
+            });
+            return Optional.of(4);
+        });
+        parentList.add(Optional::of);
+        parentList.execute().get().forEach(o->{
             System.out.print(o.isPresent() + " ");
             System.out.println(o.isPresent() ? o.get() : "N/a");
-        }
-        AsyncList<Integer> list2 = new WaterfallList<>();
-        list2.add(o -> Optional.of(1));//1
-        list2.add(o -> Optional.of(o+1));//2
-        list2.add(o -> Optional.of(o+2));//4
-        System.out.println(list2.execute());
-        for (Optional<Integer> o : list2.execute().get()) {
-            System.out.print(o.isPresent() + " ");
-            System.out.println(o.isPresent() ? o.get() : "N/a");
-        }
+        });
     }
 
     public static void main(String[] args) {

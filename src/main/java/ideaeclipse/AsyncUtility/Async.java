@@ -47,5 +47,4 @@ public class Async {
     public interface IU<T> {
         Optional<T> update(T object);
     }
-
 }

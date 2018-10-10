@@ -15,7 +15,7 @@ public abstract class AsyncList<T> {
         return list.get(index);
     }
 
-    public AsyncList<T> add(final Async.IU<T> event) {
+    public AsyncList<T>  add(final Async.IU<T> event) {
         list.add(event);
         return this;
     }
