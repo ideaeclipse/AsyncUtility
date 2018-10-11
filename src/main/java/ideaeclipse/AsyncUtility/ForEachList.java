@@ -21,19 +21,24 @@ public class ForEachList<T> extends AsyncList<T> {
      * @return returns each return of each inputted code block
      */
     @Override
-    public Optional<List<Optional<T>>> execute() {
+    public Optional<List<T>> execute() {
         ExecutorService service = Executors.newSingleThreadExecutor();
-        Future<List<Optional<T>>> future = service.submit(() -> {
-            List<Optional<T>> returnList = new LinkedList<>();
+        Future<List<T>> future = service.submit(() -> {
+            List<T> returnList = new LinkedList<>();
             List<Future<Optional<T>>> eventReturnList = new LinkedList<>();
             ExecutorService subService = Executors.newFixedThreadPool(this.size(), Event.createDaemonThreadFactory("Async-Executor"));
             for (int i = 0; i < this.size(); i++) {
-                Future<Optional<T>> f = subService.submit(new Event<>(this.get(i), i,Optional.empty()));
+                Future<Optional<T>> f = subService.submit(new Event<>(this.get(i), i, Optional.empty()));
                 eventReturnList.add(f);
             }
             subService.shutdown();
             for (Future<Optional<T>> future1 : eventReturnList) {
-                returnList.add(future1.get());
+                Optional<T> temp = future1.get();
+                if (temp.isPresent()) {
+                    returnList.add(temp.get());
+                } else {
+                    returnList.add(null);
+                }
             }
 
             return returnList;

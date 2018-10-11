@@ -47,5 +47,5 @@ public abstract class AsyncList<T> {
      * Abstract method
      * @return an option list of optional values with the generic type
      */
-    public abstract Optional<List<Optional<T>>> execute();
+    public abstract Optional<List<T>> execute();
 }

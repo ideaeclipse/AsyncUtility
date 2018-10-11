@@ -14,9 +14,9 @@ import java.util.concurrent.Future;
  */
 public class WaterfallList<T> extends AsyncList<T> {
     @Override
-    public Optional<List<Optional<T>>> execute() {
+    public Optional<List<T>> execute() {
         ExecutorService service = Executors.newSingleThreadExecutor();
-        Future<List<Optional<T>>> future = service.submit(() -> {
+        Future<List<T>> future = service.submit(() -> {
             ExecutorService subService = Executors.newSingleThreadExecutor();
             Optional<T> previous = Optional.empty();
             Future<Optional<T>> tempFuture;
@@ -26,7 +26,9 @@ public class WaterfallList<T> extends AsyncList<T> {
                 } else if (i == (this.size() - 1)) {
                     tempFuture = subService.submit(new Event<>(this.get(i), i, previous));
                     subService.shutdown();
-                    return Collections.singletonList(tempFuture.get());
+                    Optional<T> temp = tempFuture.get();
+                    if (temp.isPresent())
+                        return Collections.singletonList(temp.get());
                 } else {
                     tempFuture = subService.submit(new Event<>(this.get(i), i, previous));
                 }

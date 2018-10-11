@@ -15,7 +15,7 @@ public class AsyncTest {
                 e.printStackTrace();
             }
             System.out.println("Ending 1");
-            return Optional.of(1);
+            return Optional.empty();
         });
         list.add(o -> {
             System.out.println("Starting 2");
