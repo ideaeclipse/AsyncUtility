@@ -11,7 +11,7 @@
 ## Examples
 * Synchronous execution
 ```java
-Integer a = Async.queue(() -> {
+Integer a = Async.queue(x -> {
         System.out.println("Synchronous execution");
         return Optional.of(1);
     }, "TestThread");
@@ -74,7 +74,7 @@ private AsyncTest() {
 * Ending 2
 * Ending 1
 * Ending 3
-* Optional[[Optional[1], Optional[2], Optional[3]]]
+* Optional[[1, 2, 3]]
 */
 ```
 #### Projects
