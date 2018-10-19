@@ -28,7 +28,7 @@ public class Async {
      */
     public static <T> Optional<T> queue(final IU<T> function, final String name) {
 
-        ExecutorService service = Executors.newSingleThreadExecutor(createDaemonThreadFactory("Sync-Executor-" + name));
+        ExecutorService service = Executors.newSingleThreadExecutor(createDaemonThreadFactory("Sync-" + name));
         Future<Optional<T>> future = service.submit(new Event<>(function, 0,Optional.empty()));
         try {
             return future.get();

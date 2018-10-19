@@ -26,7 +26,7 @@ public class ForEachList<T> extends AsyncList<T> {
         Future<List<T>> future = service.submit(() -> {
             List<T> returnList = new LinkedList<>();
             List<Future<Optional<T>>> eventReturnList = new LinkedList<>();
-            ExecutorService subService = Executors.newFixedThreadPool(this.size(), Event.createDaemonThreadFactory("Async-Executor"));
+            ExecutorService subService = Executors.newFixedThreadPool(this.size(), Event.createDaemonThreadFactory("Async"));
             for (int i = 0; i < this.size(); i++) {
                 Future<Optional<T>> f = subService.submit(new Event<>(this.get(i), i, Optional.empty()));
                 eventReturnList.add(f);
