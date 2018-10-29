@@ -29,7 +29,7 @@ public class Async {
     public static <T> Optional<T> queue(final IU<T> function, final String name) {
 
         ExecutorService service = Executors.newSingleThreadExecutor(createDaemonThreadFactory("Sync-" + name));
-        Future<Optional<T>> future = service.submit(new Event<>(function, 0,Optional.empty()));
+        Future<Optional<T>> future = service.submit(new Event<>(function, 0, Optional.empty()));
         try {
             return future.get();
         } catch (InterruptedException | ExecutionException e) {
@@ -37,6 +37,16 @@ public class Async {
         }
         return Optional.empty();
     }
+
+    /**
+     * Starts a blank thead with no return
+     *
+     * @param runnable code to execute
+     */
+    public static void blankThread(final Runnable runnable) {
+        new Thread(runnable).start();
+    }
+
     /**
      * @param list list of {@link IU}
      * @param <T>  return value of each item in the list
