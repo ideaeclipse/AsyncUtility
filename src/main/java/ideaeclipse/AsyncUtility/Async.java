@@ -1,6 +1,5 @@
 package ideaeclipse.AsyncUtility;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +19,22 @@ import static ideaeclipse.AsyncUtility.Event.createDaemonThreadFactory;
  */
 @SuppressWarnings("ALL")
 public class Async {
+
+    /**
+     * This method allows for executed tasks every x milliseconds
+     * @param task task you want executed
+     * @param time how long between executions
+     * @param <V> generic type
+     */
+    public static <V> void addJob(Async.IU<V> task, long time) {
+        Async.blankThread(new Runnable() {
+            @Override
+            public void run() {
+                new Job<>(task, time);
+            }
+        });
+    }
+
     /**
      * @param function event that gets queued on a seperate thread
      * @param name     name that you want the thread to be called will be headed with Sync-Executor-'name'
@@ -45,6 +60,15 @@ public class Async {
      */
     public static void blankThread(final Runnable runnable) {
         new Thread(runnable).start();
+    }
+
+    /**
+     * Starts a blank thead with no return
+     *
+     * @param runnable code to execute
+     */
+    public static <T> void blankThread(final Async.IU<T> runnable) {
+        new Event<>(runnable, 0, Optional.empty()).call();
     }
 
     /**
