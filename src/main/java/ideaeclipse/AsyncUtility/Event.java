@@ -22,7 +22,7 @@ class Event<T> implements Callable<Optional<T>> {
     private final int threadNumber;
     private final T object;
 
-    Event(final Async.IU<T> event, final int threadNumber, Optional<T> object) {
+    Event(final Async.IU<T> event, final int threadNumber, final Optional<T> object) {
         this.threadNumber = threadNumber + 1;
         this.event = event;
         this.object = object.orElse(null);
@@ -34,9 +34,11 @@ class Event<T> implements Callable<Optional<T>> {
      */
     @Override
     public Optional<T> call() {
-        Thread.currentThread().setName(Thread.currentThread().getName() + "-" + threadNumber);
+        if (!Thread.currentThread().getName().contains("-"))
+            Thread.currentThread().setName(Thread.currentThread().getName() + "-" + threadNumber);
         return event.update(this.object);
     }
+
     /**
      * @param threadName name of the thread
      * @return returns a threadfactory with a name set

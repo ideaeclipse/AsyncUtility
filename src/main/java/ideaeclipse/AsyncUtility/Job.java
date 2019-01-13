@@ -3,7 +3,7 @@ package ideaeclipse.AsyncUtility;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Job<T> {
+class Job<T> {
     private final Async.IU<T> task;
 
     Job(final Async.IU<T> task, final Long time) {
